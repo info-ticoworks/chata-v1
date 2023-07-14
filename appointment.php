@@ -41,44 +41,56 @@ include "Includes/templates/navbar.php";
 			$client_first_name = test_input($_POST['client_first_name']);
 			$client_last_name = test_input($_POST['client_last_name']);
 			$client_phone_number = test_input($_POST['client_phone_number']);
-			$client_email = test_input($_POST['client_email']);
+			//$client_email = test_input($_POST['client_email']);
 
 			$con->beginTransaction();
 
 			try {
-				// Check If the client's email already exist in our database
-				$stmtCheckClient = $con->prepare("SELECT * FROM clients WHERE client_email = ?");
-				$stmtCheckClient->execute(array($client_email));
+				// Check If the client's already exist in our database
+				$stmtCheckClient = $con->prepare("SELECT * FROM clients WHERE phone_number = ?");
+				$stmtCheckClient->execute(array($client_phone_number));
 				$client_result = $stmtCheckClient->fetch();
 				$client_count = $stmtCheckClient->rowCount();
 
 				if ($client_count > 0) {
 					$client_id = $client_result["client_id"];
+
+					$stmtgetCurrentAppointmentID = $con->prepare("SELECT AUTO_INCREMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'chatabs' AND TABLE_NAME = 'appointments'");
+
+					$stmtgetCurrentAppointmentID->execute();
+					$appointment_id = $stmtgetCurrentAppointmentID->fetch();
+	
+					$stmt_appointment = $con->prepare("insert into appointments(date_created, client_id, employee_id, start_time, end_time_expected ) values(?, ?, ?, ?, ?)");
+					$stmt_appointment->execute(array(Date("Y-m-d H:i"), $client_id, $selected_employee, $start_time, $end_time));
+	
+					foreach ($selected_services as $service) {
+						$stmt = $con->prepare("insert into services_booked(appointment_id, service_id) values(?, ?)");
+						$stmt->execute(array($appointment_id[0], $service));
+					}
+
 				} else {
 					$stmtgetCurrentClientID = $con->prepare("SELECT AUTO_INCREMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'chatabs' AND TABLE_NAME = 'clients'");
 
 					$stmtgetCurrentClientID->execute();
 					$client_id = $stmtgetCurrentClientID->fetch();
 
-					$stmtClient = $con->prepare("insert into clients(first_name,last_name,phone_number,client_email) 
-									values(?,?,?,?)");
-					$stmtClient->execute(array($client_first_name, $client_last_name, $client_phone_number, $client_email));
-				}
+					$stmtClient = $con->prepare("insert into clients(first_name,last_name,phone_number) 
+									values(?,?,?)");
+					$stmtClient->execute(array($client_first_name, $client_last_name, $client_phone_number));
 
+					$stmtgetCurrentAppointmentID = $con->prepare("SELECT AUTO_INCREMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'chatabs' AND TABLE_NAME = 'appointments'");
 
+					$stmtgetCurrentAppointmentID->execute();
+					$appointment_id = $stmtgetCurrentAppointmentID->fetch();
+	
+					$stmt_appointment = $con->prepare("insert into appointments(date_created, client_id, employee_id, start_time, end_time_expected ) values(?, ?, ?, ?, ?)");
+					$stmt_appointment->execute(array(Date("Y-m-d H:i"), $client_id[0], $selected_employee, $start_time, $end_time));
+	
+					foreach ($selected_services as $service) {
+						$stmt = $con->prepare("insert into services_booked(appointment_id, service_id) values(?, ?)");
+						$stmt->execute(array($appointment_id[0], $service));
+					}
 
-
-				$stmtgetCurrentAppointmentID = $con->prepare("SELECT AUTO_INCREMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'chatabs' AND TABLE_NAME = 'appointments'");
-
-				$stmtgetCurrentAppointmentID->execute();
-				$appointment_id = $stmtgetCurrentAppointmentID->fetch();
-
-				$stmt_appointment = $con->prepare("insert into appointments(date_created, client_id, employee_id, start_time, end_time_expected ) values(?, ?, ?, ?, ?)");
-				$stmt_appointment->execute(array(Date("Y-m-d H:i"), $client_id[0], $selected_employee, $start_time, $end_time));
-
-				foreach ($selected_services as $service) {
-					$stmt = $con->prepare("insert into services_booked(appointment_id, service_id) values(?, ?)");
-					$stmt->execute(array($appointment_id[0], $service));
 				}
 
 				echo "<div class = 'alert alert-success'>";
@@ -250,10 +262,14 @@ include "Includes/templates/navbar.php";
 							<input type="text" name="client_last_name" id="client_last_name" class="form-control" placeholder="Apellido">
 							<span class="invalid-feedback">Este campo es requerido</span>
 						</div>
+
+
 						<div class="col-sm-6">
-							<input type="email" name="client_email" id="client_email" class="form-control" placeholder="Correo">
+							<input type="email" name="client_email" id="client_email" class="form-control" placeholder="Correo (Opcional)">
 							<span class="invalid-feedback">Dirección de Correo Inválido</span>
 						</div>
+
+
 						<div class="col-sm-6">
 							<p>Mobile</p>
 							<div class="form-group mt-2 d-inline-block">

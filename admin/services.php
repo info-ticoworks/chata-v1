@@ -56,8 +56,8 @@ if (isset($_SESSION['username_barbershop_Xw211qAAsq4']) && isset($_SESSION['pass
                                 <th scope="col">Nombre de Servicio</th>
                                 <th scope="col">Categoría de Servicio</th>
                                 <th scope="col">Descripción</th>
-                                <th scope="col">Precio</th>
-                                <th scope="col">Duración</th>
+                                <th scope="col">Precio (Colones)</th>
+                                <th scope="col">Duración (Minutos)</th>
                                 <th scope="col">Gestionar</th>
                             </tr>
                         </thead>
@@ -186,7 +186,7 @@ if (isset($_SESSION['username_barbershop_Xw211qAAsq4']) && isset($_SESSION['pass
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="service_duration">Duración de Servicio(min)</label>
+                                    <label for="service_duration">Duración de Servicio (Minutos)</label>
                                     <input type="text" class="form-control" value="<?php echo (isset($_POST['service_duration'])) ? htmlspecialchars($_POST['service_duration']) : '' ?>" placeholder="Duración de Servicio" name="service_duration">
                                     <?php
 
@@ -214,7 +214,7 @@ if (isset($_SESSION['username_barbershop_Xw211qAAsq4']) && isset($_SESSION['pass
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="service_price">Precio de Servicio($)</label>
+                                    <label for="service_price">Precio de Servicio (Colones)</label>
                                     <input type="text" class="form-control" value="<?php echo (isset($_POST['service_price'])) ? htmlspecialchars($_POST['service_price']) : '' ?>" placeholder="Precio de Servicio" name="service_price">
                                     <?php
 
@@ -414,7 +414,7 @@ if (isset($_SESSION['username_barbershop_Xw211qAAsq4']) && isset($_SESSION['pass
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="service_price">Precio de Servicio($)</label>
+                                            <label for="service_price">Precio de Servicio (Colones)</label>
                                             <input type="text" class="form-control" value="<?php echo $service['service_price'] ?>" placeholder="Precio de Servicio" name="service_price">
                                             <?php
 

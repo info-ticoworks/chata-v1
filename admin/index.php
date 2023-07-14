@@ -1,6 +1,9 @@
 <?php
 session_start();
 
+//Usuario: configuroweb
+//Password: 1234abcd..
+
 //Check If user is already logged in
 if (isset($_SESSION['username_barbershop_Xw211qAAsq4']) && isset($_SESSION['password_barbershop_Xw211qAAsq4'])) {
     //Page Title
