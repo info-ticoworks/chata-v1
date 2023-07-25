@@ -113,7 +113,7 @@ include 'Includes/functions/functions.php';
 	<footer class="sticky-footer bg-white">
 		<div class="container my-auto">
 			<div class="copyright text-center my-auto">
-				<span><a href="https://www.configuroweb.com/46-aplicaciones-gratuitas-en-php-python-y-javascript/#Aplicaciones-gratuitas-en-PHP,-Python-y-Javascript">Para más desarrollos ConfiguroWeb</a></span>
+				<span><a href="https://www.ticoworks.com">TicoWorks 2016-2023</a></span>
 			</div>
 		</div>
 	</footer>
