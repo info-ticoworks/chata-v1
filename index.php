@@ -406,16 +406,16 @@ include "Includes/templates/navbar.php";
                         Estamos muy pendientes de nuestros clientes y sus consultas o sugerencias son muy importantes para nosotros.
                     </p>
                     <h3>
-                        Calle 90 N 23 24
+                        Complejo Wilmer López
                         <br>
-                        Cali, Colombia
+                        La Plywood, Alajuela
                     </h3>
                     <h4>
                         <span style="font-weight: bold">Email:</span>
-                        hola@configuroweb.com
+                        info@chatabarbershop.com
                         <br>
                         <span style="font-weight: bold">Phone:</span>
-                        +57 316 243 00 81
+                        +506 XXXX-XXXX
                         <br>
                     </h4>
                 </div>
@@ -478,12 +478,12 @@ include "Includes/templates/navbar.php";
                 <div class="footer_widget">
                     <h3>Dirección</h3>
                     <p>
-                        Calle 90 N 23 24
+                        Complejo Wilmer López, Alajuela.
                     </p>
                     <p>
-                        hola@configuroweb.com
+                        info@chatabarbershop.com
                         <br>
-                        (+57) 316 243 00 81
+                        (+506) XXXX-XXXX
                     </p>
                 </div>
             </div>

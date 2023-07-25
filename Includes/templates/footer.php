@@ -3,13 +3,13 @@
 				<div class="row">
 					<div class="col-md-6 xs-padding">
 						<div class="copyright">
-							<a href="https://www.configuroweb.com/46-aplicaciones-gratuitas-en-php-python-y-javascript/#Aplicaciones-gratuitas-en-PHP,-Python-y-Javascript">Para más desarrollos ConfiguroWeb</a>
+							<a href="https://www.ticoworks.com/">Developed by TicoWorks 2016-2023</a>
 						</div>
 					</div>
 					<div class="col-md-6 xs-padding">
 						<ul class="footer_social">
 							<li><a href="appointment.php">Órdenes</a></li>
-							<li><a href="https://www.configuroweb.com/politica-de-privacidad/">Términos</a></li>
+							<li><a href="https://www.ticoworks.com/">Términos</a></li>
 							<li><a href="index.php#contact-us">Reportar un Problema</a></li>
 						</ul>
 					</div>

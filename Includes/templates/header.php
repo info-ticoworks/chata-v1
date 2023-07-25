@@ -7,7 +7,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0" />
 	<meta name="description" content="Peluquería ConfiguroWeb">
-	<title>Peluquería ConfiguroWeb</title>
+	<title>Chata Barber Shop</title>
 
 	<!-- EXTERNAL CSS LINKS -->
 	<link rel="shortcut icon" href="./faviconconfiguroweb.png" type="image/x-icon">
