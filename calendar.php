@@ -182,7 +182,7 @@
                     $result = date("H:i:s",strtotime($start)+$secs);
 
 
-                                        $fecha_actual = date('Y-m-d');
+                    $fecha_actual = date('Y-m-d');
 
                     $appointment_date = date("Y-m-d",strtotime($fecha_actual."- 1 days"));
 

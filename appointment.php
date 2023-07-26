@@ -35,13 +35,28 @@ include "Includes/templates/navbar.php";
 			$start_time = $date_selected . " " . $selected_date_time[1];
 			$end_time = $date_selected . " " . $selected_date_time[2];
 
+			$fecha_notificacion = date_create($date_selected);
+
+			$fecha_notificacion1 = $fecha_notificacion->format('d-m-Y');
+
+			$hora_notificacion = date_create($selected_date_time[1]);
+
+			$hora_notificacion1 = $hora_notificacion->format('H:i');
+
+			$diassemana = array("Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sábado");
+			$meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+
+			echo $diassemana[date('w')]." ".date('d')." de ".$meses[date('n')-1]. " de ".date('Y') ;
+			//Salida: Miercoles 05 de Septiembre del 2016
+
+			echo strftime("%A, %d de %B de %Y");
 
 			//Client Details
 
 			$client_first_name = test_input($_POST['client_first_name']);
 			$client_last_name = test_input($_POST['client_last_name']);
 			$client_phone_number = test_input($_POST['client_phone_number']);
-			//$client_email = test_input($_POST['client_email']);
+			$client_email = test_input($_POST['client_email']);
 
 			$con->beginTransaction();
 
@@ -66,6 +81,33 @@ include "Includes/templates/navbar.php";
 					foreach ($selected_services as $service) {
 						$stmt = $con->prepare("insert into services_booked(appointment_id, service_id) values(?, ?)");
 						$stmt->execute(array($appointment_id[0], $service));
+
+						//Inicio de Notificación por WhatsApp
+						$curl = curl_init();
+						curl_setopt_array($curl, [
+							CURLOPT_PORT => "3020",
+							CURLOPT_URL => "http://ws.tico.works/lead",
+							CURLOPT_RETURNTRANSFER => true,
+							CURLOPT_ENCODING => "",
+							CURLOPT_MAXREDIRS => 10,
+							CURLOPT_TIMEOUT => 30,
+							CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+							CURLOPT_CUSTOMREQUEST => "POST",
+							CURLOPT_POSTFIELDS => "{\n  \"message\":\"Hola $client_first_name $client_last_name. Se ha creado exitosamente su cita en Chata BarberShop para el próximo    a las   . Muchas gracias!\",\n  \"phone\":\"506$client_phone_number\"\n}",
+							CURLOPT_HTTPHEADER => [
+							"Content-Type: application/json"
+							],
+						]);
+						$response = curl_exec($curl);
+						$err = curl_error($curl);
+						curl_close($curl);
+						if ($err) {
+							echo "cURL Error #:" . $err;
+						} else {
+							//echo $response;
+							echo '<script>console.log("Notificación enviada por WhatsApp exitosamente...")</script>';
+						}
+						//Final de Notificación por WhatsApp
 					}
 
 				} else {
@@ -89,6 +131,33 @@ include "Includes/templates/navbar.php";
 					foreach ($selected_services as $service) {
 						$stmt = $con->prepare("insert into services_booked(appointment_id, service_id) values(?, ?)");
 						$stmt->execute(array($appointment_id[0], $service));
+
+						//Inicio de Notificación por WhatsApp
+						$curl = curl_init();
+						curl_setopt_array($curl, [
+							CURLOPT_PORT => "3020",
+							CURLOPT_URL => "http://ws.tico.works/lead",
+							CURLOPT_RETURNTRANSFER => true,
+							CURLOPT_ENCODING => "",
+							CURLOPT_MAXREDIRS => 10,
+							CURLOPT_TIMEOUT => 30,
+							CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+							CURLOPT_CUSTOMREQUEST => "POST",
+							CURLOPT_POSTFIELDS => "{\n  \"message\":\"Hola $client_first_name $client_last_name. Se ha creado exitosamente su cita en Chata BarberShop para el próximo $date_selected a las $selected_date_time[1]. Muchas gracias!\",\n  \"phone\":\"506$client_phone_number\"\n}",
+							CURLOPT_HTTPHEADER => [
+							"Content-Type: application/json"
+							],
+						]);
+						$response = curl_exec($curl);
+						$err = curl_error($curl);
+						curl_close($curl);
+						if ($err) {
+							echo "cURL Error #:" . $err;
+						} else {
+							//echo $response;
+							echo '<script>console.log("Notificación enviada por WhatsApp exitosamente...")</script>';
+						}
+						//Final de Notificación por WhatsApp
 					}
 
 				}
@@ -148,14 +217,14 @@ include "Includes/templates/navbar.php";
 						echo "</span>";
 						echo "<div class = 'service_price_field'>";
 						echo "<span style = 'font-weight: bold;'>";
-						echo $row['service_price'] . "$";
+						echo "₵ " . $row['service_price'];
 						echo "</span>";
 						echo "</div>";
 					?>
 						<div class="select_item_bttn">
 							<div class="btn-group-toggle" data-toggle="buttons">
 								<label class="service_label item_label btn btn-secondary">
-									<input type="checkbox" name="selected_services[]" value="<?php echo $row['service_id'] ?>" autocomplete="off">Fijar
+									<input type="checkbox" name="selected_services[]" value="<?php echo $row['service_id'] ?>" autocomplete="off">Escoger
 								</label>
 							</div>
 						</div>
@@ -262,14 +331,10 @@ include "Includes/templates/navbar.php";
 							<input type="text" name="client_last_name" id="client_last_name" class="form-control" placeholder="Apellido">
 							<span class="invalid-feedback">Este campo es requerido</span>
 						</div>
-
-
 						<div class="col-sm-6">
 							<input type="email" name="client_email" id="client_email" class="form-control" placeholder="Correo (Opcional)">
 							<span class="invalid-feedback">Dirección de Correo Inválido</span>
 						</div>
-
-
 						<div class="col-sm-6">
 							<p>Mobile</p>
 							<div class="form-group mt-2 d-inline-block">
