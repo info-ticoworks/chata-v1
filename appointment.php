@@ -2,7 +2,7 @@
 
 <?php
 
-setlocale(LC_ALL, 'spanish.utf8');
+setlocale(LC_ALL, 'es_CR.UTF-8');
 
 include "connect.php";
 include "Includes/functions/functions.php";
