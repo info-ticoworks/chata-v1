@@ -2,6 +2,8 @@
 
 <?php
 
+setlocale(LC_ALL, 'spanish.utf8');
+
 include "connect.php";
 include "Includes/functions/functions.php";
 include "Includes/templates/header.php";
@@ -29,6 +31,8 @@ include "Includes/templates/navbar.php";
 
 			// Selected DATE+TIME
 
+			
+
 			$selected_date_time = explode(' ', $_POST['desired_date_time']);
 
 			$date_selected = $selected_date_time[0];
@@ -37,19 +41,20 @@ include "Includes/templates/navbar.php";
 
 			$fecha_notificacion = date_create($date_selected);
 
-			$fecha_notificacion1 = $fecha_notificacion->format('d-m-Y');
+			$fecha_notificacion1 = $fecha_notificacion->format('Y/m/d');
 
 			$hora_notificacion = date_create($selected_date_time[1]);
 
 			$hora_notificacion1 = $hora_notificacion->format('H:i');
 
-			$diassemana = array("Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sábado");
-			$meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+			$data['Nacimiento'] = $fecha_notificacion1;
+			$hora['horaNacimiento'] = $hora_notificacion1;
 
-			echo $diassemana[date('w')]." ".date('d')." de ".$meses[date('n')-1]. " de ".date('Y') ;
-			//Salida: Miercoles 05 de Septiembre del 2016
-
-			echo strftime("%A, %d de %B de %Y");
+			/* Convertimos la fecha a marca de tiempo */
+			$marca = strtotime($data['Nacimiento']);
+			$marca1 = strtotime($hora['horaNacimiento']);
+			
+			echo 'Hora de cita: ' . strftime('%A %e de %B de %Y', $marca)  . strftime(' a las %I:%M %p', $marca1) . "<br>";
 
 			//Client Details
 
@@ -83,6 +88,7 @@ include "Includes/templates/navbar.php";
 						$stmt->execute(array($appointment_id[0], $service));
 
 						//Inicio de Notificación por WhatsApp
+						/*
 						$curl = curl_init();
 						curl_setopt_array($curl, [
 							CURLOPT_PORT => "3020",
@@ -93,7 +99,7 @@ include "Includes/templates/navbar.php";
 							CURLOPT_TIMEOUT => 30,
 							CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 							CURLOPT_CUSTOMREQUEST => "POST",
-							CURLOPT_POSTFIELDS => "{\n  \"message\":\"Hola $client_first_name $client_last_name. Se ha creado exitosamente su cita en Chata BarberShop para el próximo    a las   . Muchas gracias!\",\n  \"phone\":\"506$client_phone_number\"\n}",
+							CURLOPT_POSTFIELDS => "{\n  \"message\":\"Hola $client_first_name $client_last_name. Se ha creado exitosamente su cita en Chata BarberShop para el próximo " . strftime('%A %e de %B de %Y', $marca) . ". Muchas gracias!\",\n  \"phone\":\"506$client_phone_number\"\n}",
 							CURLOPT_HTTPHEADER => [
 							"Content-Type: application/json"
 							],
@@ -108,6 +114,7 @@ include "Includes/templates/navbar.php";
 							echo '<script>console.log("Notificación enviada por WhatsApp exitosamente...")</script>';
 						}
 						//Final de Notificación por WhatsApp
+						*/
 					}
 
 				} else {
