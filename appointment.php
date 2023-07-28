@@ -54,7 +54,7 @@ include "Includes/templates/navbar.php";
 			$marca = strtotime($data['Nacimiento']);
 			$marca1 = strtotime($hora['horaNacimiento']);
 			
-			echo 'Hora de cita: ' . strftime('%A %e de %B de %Y', $marca)  . strftime(' a las %I:%M %p', $marca1) . "<br>";
+			//echo 'Hora de cita: ' . strftime('%A %e de %B de %Y', $marca)  . strftime(' a las %I:%M %p', $marca1) . "<br>";
 
 			$diassemana = array("domingo","lunes","martes","miércoles","jueves","viernes","sábado");
 			$meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
@@ -232,7 +232,7 @@ include "Includes/templates/navbar.php";
 							echo '<script>console.log("Notificación enviada por WhatsApp exitosamente...")</script>';
 						}
 						//Final de Notificación por WhatsApp al dueño
-						
+
 					}
 
 				}
