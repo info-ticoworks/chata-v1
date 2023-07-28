@@ -20,9 +20,6 @@
                 <div class="header-btn" style="margin-left:10px">
                     <a href="appointment.php" class="menu-btn">Reservar una Cita</a>
                 </div>
-                <div class="header-btn" style="margin-left:5px">
-                    <a href="appointment.php" class="menu-btn">Administrar Citas</a>
-                </div>
 
             </div>
             <a class="mob-menu-toggle">

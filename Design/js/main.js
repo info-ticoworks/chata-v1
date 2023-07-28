@@ -202,7 +202,6 @@ function validateForm()
 
             $.ajax(
             {
-
                 url:"calendar.php",
                 method:"POST",
                 data:{selected_services:selected_services,selected_employee:selected_employee},
@@ -279,18 +278,18 @@ function validateForm()
                 {
                     $('#client_email').css("border", "0px");
                     $("#client_email ~ span").css("display", "none");
-
-                    if(!phonenumber(client_phone_number))
-                    {
-                        $('#client_phone_number').css("border", "2px solid #dc3545");
-                        $("#client_phone_number ~ span").css("display", "block");
-                        valid = false;
-                    }
-                    else
-                    {
-                        $('#client_phone_number').css("border", "0px");
-                        $("#client_phone_number ~ span").css("display", "none");
-                    }
+                }
+                
+                if(!phonenumber(client_phone_number))
+                {
+                    $('#client_phone_number').css("border", "2px solid #dc3545");
+                    $("#client_phone_number ~ span").css("display", "block");
+                    valid = false;
+                }
+                else
+                {
+                    $('#client_phone_number').css("border", "0px");
+                    $("#client_phone_number ~ span").css("display", "none");
                 }
             }
         }

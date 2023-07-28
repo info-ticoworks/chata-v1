@@ -2,7 +2,7 @@
 
 <?php
 
-setlocale(LC_ALL, 'es_CR.UTF-8');
+setlocale(LC_ALL,"es_ES");
 
 include "connect.php";
 include "Includes/functions/functions.php";
@@ -56,6 +56,20 @@ include "Includes/templates/navbar.php";
 			
 			echo 'Hora de cita: ' . strftime('%A %e de %B de %Y', $marca)  . strftime(' a las %I:%M %p', $marca1) . "<br>";
 
+			$diassemana = array("domingo","lunes","martes","miércoles","jueves","viernes","sábado");
+			$meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+			$am = array("am","pm");
+
+				if (strftime('%p', $marca1) == 'AM') {
+					$detAM = 'am';
+				} else {
+					$detAM = 'pm';
+				}
+ 
+			//echo 'Fecha y hora de la cita: ' . $diassemana[strftime('%w', $marca)]." ".strftime('%e', $marca)." de ".$meses[intval(strftime('%m', $marca))]. " de ".strftime('%Y', $marca)  . strftime(', a las %I:%M ', $marca1) . $detAM . "<br>";
+
+			//echo strftime("%A %d de %B del %Y");
+
 			//Client Details
 
 			$client_first_name = test_input($_POST['client_first_name']);
@@ -87,8 +101,7 @@ include "Includes/templates/navbar.php";
 						$stmt = $con->prepare("insert into services_booked(appointment_id, service_id) values(?, ?)");
 						$stmt->execute(array($appointment_id[0], $service));
 
-						//Inicio de Notificación por WhatsApp
-						/*
+						//Inicio de Notificación por WhatsApp al cliente
 						$curl = curl_init();
 						curl_setopt_array($curl, [
 							CURLOPT_PORT => "3020",
@@ -99,7 +112,7 @@ include "Includes/templates/navbar.php";
 							CURLOPT_TIMEOUT => 30,
 							CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 							CURLOPT_CUSTOMREQUEST => "POST",
-							CURLOPT_POSTFIELDS => "{\n  \"message\":\"Hola $client_first_name $client_last_name. Se ha creado exitosamente su cita en Chata BarberShop para el próximo " . strftime('%A %e de %B de %Y', $marca) . ". Muchas gracias!\",\n  \"phone\":\"506$client_phone_number\"\n}",
+							CURLOPT_POSTFIELDS => "{\n  \"message\":\"Hola $client_first_name $client_last_name. Se ha creado exitosamente su cita en Chata BarberShop para el próximo *"  . $diassemana[strftime('%w', $marca)]." ".strftime('%e', $marca)." de ".$meses[intval(strftime('%m', $marca))]. " de ".strftime('%Y', $marca)  . strftime(', a las %I:%M ', $marca1) . $detAM . "*. Favor estar *10 minutos antes* en la Barbería. Muchas gracias!\",\n  \"phone\":\"506$client_phone_number\"\n}",
 							CURLOPT_HTTPHEADER => [
 							"Content-Type: application/json"
 							],
@@ -113,8 +126,35 @@ include "Includes/templates/navbar.php";
 							//echo $response;
 							echo '<script>console.log("Notificación enviada por WhatsApp exitosamente...")</script>';
 						}
-						//Final de Notificación por WhatsApp
-						*/
+						//Final de Notificación por WhatsApp al cliente
+
+						//Inicio de Notificación por WhatsApp al dueño
+						$curl = curl_init();
+						curl_setopt_array($curl, [
+							CURLOPT_PORT => "3020",
+							CURLOPT_URL => "http://ws.tico.works/lead",
+							CURLOPT_RETURNTRANSFER => true,
+							CURLOPT_ENCODING => "",
+							CURLOPT_MAXREDIRS => 10,
+							CURLOPT_TIMEOUT => 30,
+							CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+							CURLOPT_CUSTOMREQUEST => "POST",
+							CURLOPT_POSTFIELDS => "{\n  \"message\":\"Hola Chata. El cliente $client_first_name $client_last_name, número de taléfono +506$client_phone_number, ha apartado una cita para el próximo *"  . $diassemana[strftime('%w', $marca)]." ".strftime('%e', $marca)." de ".$meses[intval(strftime('%m', $marca))]. " de ".strftime('%Y', $marca)  . strftime(', a las %I:%M ', $marca1) . $detAM . "*. Para administrar las citas, favor ingresar a https://chatabarbershop.com/admin/. Muchas gracias!\",\n  \"phone\":\"50683528129\"\n}",
+							CURLOPT_HTTPHEADER => [
+							"Content-Type: application/json"
+							],
+						]);
+						$response = curl_exec($curl);
+						$err = curl_error($curl);
+						curl_close($curl);
+						if ($err) {
+							echo "cURL Error #:" . $err;
+						} else {
+							//echo $response;
+							echo '<script>console.log("Notificación enviada por WhatsApp exitosamente...")</script>';
+						}
+						//Final de Notificación por WhatsApp al dueño
+
 					}
 
 				} else {
@@ -174,6 +214,8 @@ include "Includes/templates/navbar.php";
 				echo "</div>";
 
 				$con->commit();
+
+
 			} catch (Exception $e) {
 				$con->rollBack();
 				echo "<div class = 'alert alert-danger'>";
@@ -329,7 +371,7 @@ include "Includes/templates/navbar.php";
 				</div>
 
 				<div>
-					<div class="form-group colum-row row">
+					<div class="client-form">
 						<div class="col-sm-6">
 							<input type="text" name="client_first_name" id="client_first_name" class="form-control" placeholder="Nombre">
 							<span class="invalid-feedback">Este campo es requerido</span>
@@ -343,10 +385,9 @@ include "Includes/templates/navbar.php";
 							<span class="invalid-feedback">Dirección de Correo Inválido</span>
 						</div>
 						<div class="col-sm-6">
-							<p>Mobile</p>
-							<div class="form-group mt-2 d-inline-block">
+							<div class="client-phone">
         					<span class="border-end country-code px-2">+506</span>
-       						<input type="text" name="client_phone_number" id="client_phone_number" class="form-control" placeholder="Teléfono (sin espacios)">
+       						<input type="text" name="client_phone_number" id="client_phone_number" class="form-control" style='margin: 0px 0px' style='width: ' placeholder="Teléfono (sin espacios)">
 							<span class="invalid-feedback">Número de Teléfono Inválido</span>
     						</div>
 						</div>
